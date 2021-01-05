@@ -1,6 +1,8 @@
 from flask import Flask,render_template
+from routes.login import logIn
 
 app = Flask(__name__)
+app.register_blueprint(logIn)   
 
 @app.route('/')
 def index():
