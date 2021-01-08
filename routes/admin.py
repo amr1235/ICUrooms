@@ -1,8 +1,10 @@
 from flask import Blueprint, redirect, render_template, session
 from routes.check import check
+
 ad = Blueprint('admin' ,__name__)
 
-@ad.route('/')
+@ad.route('/admin')
 def admin_home():
-    user_typ = check()
-    return 'Admin Page'
+    if check() == 'admin' :
+        return 'Admin Page'
+    return 'not admin'

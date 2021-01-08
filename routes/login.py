@@ -1,12 +1,11 @@
 from flask import Blueprint,request,render_template,redirect,url_for, session
 from datetime import timedelta
 import mysql.connector
+from routes.check import check
 
 logIn = Blueprint("login",__name__)
 
-Id = 0 # global variable for session['username']
-
-DB = mysql.connector.connect(host="localhost",user="root",passwd="mysql",database="ICUroomsDB")
+DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="ICUroomsDB")
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
@@ -29,14 +28,14 @@ def getID(id) :
 # defining the id to know the user wheather he is a doctor or patien or tech it returns a object of id and the type
 def defining_id (id) :
     idstr = str(id)
-    lastTwoDigits = idstr[len(idstr) - 2] + idstr[len(idstr) - 1] # now i have the last two digits
+    lastTwoDigits = idstr[0] + idstr[1] # now i have the last two digits
     if lastTwoDigits == "00" :
         return {"id" : id, "typ" : 'doctors'}
     elif lastTwoDigits == "01" :
         return {"id" : id, "typ" : 'patients'}
-    elif lastTwoDigits == "10" :
+    elif lastTwoDigits == "11" :
         return {"id" : id, "typ" : 'technicians'}
-    else :
+    else:
         return {"id" : id, "typ" : 'admins'}
     
 # checkin if the id and the password is correct and log in if So
@@ -53,13 +52,11 @@ def valid_login(id,password) :
         getpass = "SELECT password FROM %s WHERE id = %s"%(idAndType['typ'],idAndType['id'])
         cursor.execute(getpass)
         realPassword = cursor.fetchone()[0]
-        print(realPassword , password)
+        print(password , realPassword)
         if  realPassword == password : # somethin wrong here
             # assign a name to session
-            global Id
-            Id = session['username']
             session['username'] = request.form['id']
-            return redirect('/%s'%(idAndType['typ'],)) # to home page (index)
+            return redirect('/') # to home page (index)
         else : 
             error = "password incorrect"
             return render_template("index.html",error=error)

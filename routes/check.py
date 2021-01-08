@@ -1,17 +1,19 @@
 # check for sessions and user validation
 from flask import session, redirect, render_template
-from routes.login import Id
+# from app import Id
 
 def check():
     if 'username' in session :
-        session['username'] = userid   
-        lastTwoDigits = userid[len(userid) - 2] + userid[len(userid) - 1] # now i have the last two digits
+        userid = session['username']     
+        lastTwoDigits = userid[0] + userid[1] # now i have the last two digits
         if lastTwoDigits == "00" :
             return 'doctor'
         elif lastTwoDigits == "01" :
             return 'patient'
-        elif lastTwoDigits == "10" : 
+        elif lastTwoDigits == "11" : 
             return 'tech'
-        elif lastTwoDigits == "11" :
+        elif lastTwoDigits == "10" :
             return 'admin' 
+        else:
+            return 'not in users'
 
