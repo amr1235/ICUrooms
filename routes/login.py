@@ -4,6 +4,7 @@ import mysql.connector
 
 logIn = Blueprint("login",__name__)
 
+Id = 0 # global variable for session['username']
 
 DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="ICUroomsDB")
 cursor = DB.cursor()
@@ -53,8 +54,10 @@ def valid_login(id,password) :
         print(realPassword , password)
         if  realPassword == password : # somethin wrong here
             # assign a name to session
+            global Id
+            Id = session['username']
             session['username'] = request.form['id']
-            return redirect('/') # to home page (index)
+            return redirect(f'/{idAndType['typ']}') # to home page (index)
         else : 
             error = "password incorrect"
             return render_template("loginForm.html",error=error)
