@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,session,render_template
 from datetime import timedelta
 from routes.login import logIn
 import mysql.connector

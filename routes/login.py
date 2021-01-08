@@ -28,7 +28,7 @@ def getID(id) :
 # defining the id to know the user wheather he is a doctor or patien or tech it returns a object of id and the type
 def defining_id (id) :
     idstr = str(id)
-    lastTwoDigits = idstr[0] + idstr[1] # now i have the last two digits
+    lastTwoDigits = idstr[len(idstr) - 2] + idstr[len(idstr) - 1] # now i have the last two digits
     if lastTwoDigits == "00" :
         return {"id" : id, "typ" : 'doctors'}
     elif lastTwoDigits == "01" :
@@ -47,11 +47,11 @@ def valid_login(id,password) :
         idAndType = defining_id(id)
         # checking the password
         # get the password that belongs to that id (real password)
-        getpass = "SELECT password FROM %s WHERE id = %s"   %(idAndType['typ'],idAndType['id'])
+        getpass = "SELECT password FROM %s WHERE id = %s"%(idAndType['typ'],idAndType['id'])
         cursor.execute(getpass)
         realPassword = cursor.fetchone()[0]
         print(realPassword , password)
-        if  realPassword != password : # somethin wrong here
+        if  realPassword == password : # somethin wrong here
             # assign a name to session
             session['username'] = request.form['id']
             return redirect('/') # to home page (index)
