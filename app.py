@@ -1,7 +1,7 @@
 from flask import Flask,session,render_template
 from datetime import timedelta
 from routes.login import logIn
-from routes.tech import tech
+# from routes.tech import tech
 from routes.admin import ad
 import mysql.connector
 
@@ -12,7 +12,7 @@ app.register_blueprint(logIn)
 app.register_blueprint(ad, url_prefix='/admin')
 app.register_blueprint(tech, url_prefix='/tech')
 
-@app.route('/')   
+@app.route('/')
 def index():
     # if the session exists
     if 'username' in session:

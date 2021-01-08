@@ -6,7 +6,7 @@ logIn = Blueprint("login",__name__)
 
 Id = 0 # global variable for session['username']
 
-DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="ICUroomsDB")
+DB = mysql.connector.connect(host="localhost",user="root",passwd="mysql",database="ICUroomsDB")
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
@@ -15,7 +15,7 @@ def login():
         session.permanent = True
         return valid_login(request.form['id'],request.form['password'])
     else :
-        return render_template("loginForm.html",error=error) 
+        return render_template("index.html",error=error) 
 
 #get the id of the user returns -1 if it doesn't exist and returns the id if it exist
 def getID(id) : 
@@ -34,8 +34,10 @@ def defining_id (id) :
         return {"id" : id, "typ" : 'doctors'}
     elif lastTwoDigits == "01" :
         return {"id" : id, "typ" : 'patients'}
-    else: #PUUUUUUUUUUUUUUUUG must do a condition
+    elif lastTwoDigits == "10" :
         return {"id" : id, "typ" : 'technicians'}
+    else :
+        return {"id" : id, "typ" : 'admins'}
     
 # checkin if the id and the password is correct and log in if So
 def valid_login(id,password) :
@@ -43,7 +45,7 @@ def valid_login(id,password) :
     ID = getID(id)
     if ID == '-1' :
         error = "this id doesn't exist "
-        return render_template("loginForm.html",error=error)
+        return render_template("index.html",error=error)
     else :
         idAndType = defining_id(id)
         # checking the password
@@ -57,7 +59,7 @@ def valid_login(id,password) :
             global Id
             Id = session['username']
             session['username'] = request.form['id']
-            return redirect(f'/{idAndType['typ']}') # to home page (index)
+            return redirect('/%s'%(idAndType['typ'],)) # to home page (index)
         else : 
             error = "password incorrect"
-            return render_template("loginForm.html",error=error)
+            return render_template("index.html",error=error)
