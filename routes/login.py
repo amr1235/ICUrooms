@@ -9,12 +9,11 @@ DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",data
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
-    error=""
     if request.method == "POST" :
         session.permanent = True
         return valid_login(request.form['id'],request.form['password'])
     else :
-        return render_template("index.html",error=error) 
+        return redirect("/") 
 
 #get the id of the user returns -1 if it doesn't exist and returns the id if it exist
 def getID(id) : 
@@ -56,7 +55,7 @@ def valid_login(id,password) :
         if  realPassword == password : # somethin wrong here
             # assign a name to session
             session['username'] = request.form['id']
-            return redirect('/') # to home page (index)
+            return redirect('/%s'%(idAndType["typ"]))
         else : 
             error = "password incorrect"
             return render_template("index.html",error=error)

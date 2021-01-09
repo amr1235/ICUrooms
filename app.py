@@ -4,6 +4,7 @@ from routes.login import logIn
 from routes.tech import tech
 from routes.admin import ad
 from routes.check import check
+from routes.doctor import doctor
 import mysql.connector
 
 app = Flask(__name__)
@@ -12,6 +13,7 @@ app.permanent_session_lifetime = timedelta(days=5) # 5-day session
 app.register_blueprint(logIn)
 app.register_blueprint(ad)#, url_prefix='/admin')
 app.register_blueprint(tech, url_prefix='/tech')
+app.register_blueprint(doctor)
 
 Id = 0 # global variable for session['username']
 
@@ -21,7 +23,7 @@ def index():
     # if the session exists
     if 'username' in session:
         user = check()
-        return redirect(f'/{user}/')
+        return redirect(f'/{user}')
     else: 
         return render_template('index.html')
 
@@ -36,11 +38,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-@app.route('/doctor/')   # this function is just for testing until you create file for doctors 
-def doc():
-    # if the session exists
-    if check() == 'doctor':
-        return 'doctoooooooor'
-    else: 
-        return 'not doooooooc'

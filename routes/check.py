@@ -7,7 +7,7 @@ def check():
         userid = session['username']     
         lastTwoDigits = userid[0] + userid[1] # now i have the last two digits
         if lastTwoDigits == "00" :
-            return 'doctor'
+            return 'doctors'
         elif lastTwoDigits == "01" :
             return 'patient'
         elif lastTwoDigits == "11" : 
