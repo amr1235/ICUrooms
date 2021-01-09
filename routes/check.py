@@ -5,7 +5,7 @@ from flask import session, redirect, render_template
 def check():
     if 'username' in session :
         userid = session['username']     
-        lastTwoDigits = userid[0] + userid[1] # now i have the last two digits
+        lastTwoDigits = userid[len(userid) - 2] + userid[len(userid) - 1] # now i have the last two digits
         if lastTwoDigits == "00" :
             return 'doctors'
         elif lastTwoDigits == "01" :
