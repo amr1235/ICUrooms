@@ -5,7 +5,7 @@ from routes.check import check
 
 logIn = Blueprint("login",__name__)
 
-DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="ICUroomsDB")
+DB = mysql.connector.connect(host="localhost",user="root",passwd="mysql",database="icu")
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
@@ -17,7 +17,7 @@ def login():
 
 #get the id of the user returns -1 if it doesn't exist and returns the id if it exist
 def getID(id) : 
-    getid = "SELECT t.id FROM (SELECT id FROM doctors UNION SELECT id FROM patients UNION SELECT id FROM technicians) t WHERE id = %s"
+    getid = "SELECT t.id FROM (SELECT id FROM doctors UNION SELECT id FROM patients UNION SELECT id FROM technicians UNION SELECT id from admins) t WHERE id = %s"
     val = (id,)
     cursor.execute(getid,val)
     if cursor.fetchone() == None :
@@ -27,7 +27,7 @@ def getID(id) :
 # defining the id to know the user wheather he is a doctor or patien or tech it returns a object of id and the type
 def defining_id (id) :
     idstr = str(id)
-    lastTwoDigits = idstr[0] + idstr[1] # now i have the last two digits
+    lastTwoDigits = idstr[len(idstr) - 2] + idstr[len(idstr) - 1] # now i have the last two digits
     if lastTwoDigits == "00" :
         return {"id" : id, "typ" : 'doctors'}
     elif lastTwoDigits == "01" :
@@ -49,6 +49,7 @@ def valid_login(id,password) :
         # checking the password
         # get the password that belongs to that id (real password)
         getpass = "SELECT password FROM %s WHERE id = %s"%(idAndType['typ'],idAndType['id'])
+        print(getpass)
         cursor.execute(getpass)
         realPassword = cursor.fetchone()[0]
         print(password , realPassword)

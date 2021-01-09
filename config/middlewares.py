@@ -11,8 +11,9 @@ def is_logged_in() :
 #middleware to check if there is a doctor is logged in 
 def is_doctor_logged_in():
     if(is_logged_in()) :
-        session['username'][0] + session['username'][1]
-        if((session['username'][0] + session['username'][1]) == "00"):
+        idstr = str(session['username'])
+        lastTwoDig = idstr[len(idstr) - 2] + idstr[len(idstr) - 1]
+        if(lastTwoDig == "00"):
             return True
         else : 
             return False
