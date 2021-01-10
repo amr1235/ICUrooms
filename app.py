@@ -27,12 +27,12 @@ def index():
     else: 
         return render_template('index.html')
 
-@app.route('/logout')   
+@app.route('/logout')
 def logout():
     # if the session exists
     if 'username' in session:
         session.pop('username', None) # remove the session
-        return 'logged out'
+        return redirect('/')
     else: 
         return redirect('/')
 
