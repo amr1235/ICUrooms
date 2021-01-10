@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+<body>
+    <h1>Free technician is: {{free_tech_id}}</h1>
+    <form action="/admin/add-user" method=post enctype=multipart/form-data>
+        ID<input type="text" name="id">
+        Old Password<input type="password" name="oldpassword">
+        New Password<input type="password" name="newpassword">
+        <input type=submit value=Send>
+    </form>
+    <form action="/admin/to-tech" method=post enctype=multipart/form-data>
+        Free technician ID<input type="text" name="free_tech_id">
+        Device Name<input type="text" name="device">
+        Room ID<input type="text" name="room_no">
+        <input type=submit value=Send>
+    </form>
+</body>
+</html>

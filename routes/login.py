@@ -5,7 +5,7 @@ from routes.check import check
 
 logIn = Blueprint("login",__name__)
 
-DB = mysql.connector.connect(host="localhost",user="root",passwd="mysql",database="icu")
+DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="icu")
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
@@ -53,7 +53,7 @@ def valid_login(id,password) :
         cursor.execute(getpass)
         realPassword = cursor.fetchone()[0]
         print(password , realPassword)
-        if  realPassword == password : # somethin wrong here
+        if  realPassword == password : # somethin wrong here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             # assign a name to session
             session['username'] = request.form['id']
             return redirect('/%s'%(idAndType["typ"]))

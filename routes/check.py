@@ -4,8 +4,9 @@ from flask import session, redirect, render_template
 
 def check():
     if 'username' in session :
-        userid = session['username']     
-        lastTwoDigits = userid[len(userid) - 2] + userid[len(userid) - 1] # now i have the last two digits
+        id = session['username']     
+        str_id = str(id)
+        lastTwoDigits = str_id[len(str_id) - 2] + str_id[len(str_id) - 1] # now i have the last two digits
         if lastTwoDigits == "00" :
             return 'doctors'
         elif lastTwoDigits == "01" :
@@ -17,3 +18,16 @@ def check():
         else:
             return 'not in users'
 
+def userType(id):
+    str_id = str(id)
+    lastTwoDigits = str_id[len(str_id) - 2] + str_id[len(str_id) - 1] # now i have the last two digits
+    if lastTwoDigits == "00" :
+        return 'doctors'
+    elif lastTwoDigits == "01" :
+        return 'patients'
+    elif lastTwoDigits == "11" : 
+        return 'technicians'
+    elif lastTwoDigits == "10" :
+        return 'admins' 
+    else:
+        return 'not in users'
