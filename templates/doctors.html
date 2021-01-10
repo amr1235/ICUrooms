@@ -86,7 +86,7 @@
             <td>{{ patient['phone'] }}</td>
             <td>{{ patient['room_number'] }}</td>
             <td><a href="{{ patient['email'] }}">Send Mail</a></td>
-            <td><a href="#" download>Patient’s Scans</a></td>
+            <td><a href="doctors/scans?patientId={{ patient['id'] }}" >Patient’s Scans</a></td>
           </tr>
           {% endfor %}
         </tbody>
