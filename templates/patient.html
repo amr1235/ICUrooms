@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A+ Hospital</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+    crossorigin="anonymous">
+  <link rel="shourtcut icon" href="{{ url_for('static',filename='pics/A+.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/patient.css') }}">
+</head>
+
+<body>
+
+
+  <header>
+    <nav class="navbar  navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"> <img id="Aplus" src="{{ url_for('static',filename='pics/A+.png') }}"
+            alt="logo"> A+ Hospital </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link " aria-current="page" href="#supervise">Supervising Doctors <i
+                  class="fas fa-user-md"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#scans">Scans <i class="fas fa-x-ray"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#info">Info Update <i class="fas fa-info-circle"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#password">Update Password <i class="fas fa-key"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="/logout" class="btn btn-danger ">Log-out <i class="fas fa-sign-out-alt"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section id="supervise" class="container" data-aos="fade-in">
+      <h1>Welcome dear Patient</h1>
+      <h2>here is a table with all your doctors </h2>
+      {% if doctors|length != 0 %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">E-mail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+                    <th scope="row">1</th>
+                    <td>B</td>
+                    <td><a href="tel:123-456-7890" class="nav-link"><i class="fas fa-phone-square-alt"></i></a></td>
+                    <td><a href="mailto: abc@example.com">Send Mail</a></td>
+                  </tr> -->
+          {% for doctor in doctors %}
+          <tr>
+            <th scope="row">{{ loop.index0 + 1}}</th>
+            <td>{{ doctor['firstName'] + " " + doctor['lastName'] }}</td>
+            <td><a href="tel: {{ doctor['phone'] }}" class="nav-link"><i class="fas fa-phone-square-alt"></i></a></td>
+            <td><a href="mailto: {{ doctor['email'] }}">Send Mail</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h3>you don't have doctors yet</h3>
+      {% endif %}
+    </section>
+
+    <section id="scans" class="container" data-aos="fade-in">
+      <h1>Your ready to download Scans</h1>
+      {% if scansIds|length !=0 %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Scan</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for scanId in scansIds %}
+          <tr>
+            <th scope="row">{{ loop.index0 + 1 }}</th>
+            <td><a href="patients/scans?scanId={{scanId}}">Your Scan</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <h3>you don't have scans yet</h3>
+      {% endif %}
+    </section>
+
+    <section id="info" class="container" data-aos="fade-in">
+      <h1>Update Personal Information</h1>
+      <form action="/patients/updateInfo" method="POST" class="container">
+        <div class="row">
+          <div class="mb-3 col-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" name="firstName" value="{{ patientInfo['firstName'] }}" required>
+          </div>
+          <div class="mb-3 col-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="lastName" value="{{ patientInfo['lastName'] }}" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="mb-3">
+            <label for="email" class="form-label">E-mail</label>
+            <input type="email" class="form-control" value="{{ patientInfo['email'] }}" name="email" required placeholder="ex:me@website.com">
+          </div>
+        </div>
+        <div class="row">
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="number" class="form-control" value="{{ patientInfo['phone'] }}" name="phone" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update info</button>
+      </form>
+      <div class="container">
+        <br>
+        {% with messages = get_flashed_messages(category_filter=["info"]) %}
+        <label class=flashes>{{ messages[0] }}</label>
+        {% endwith %}
+      </div>
+    </section>
+
+    <section class="container" data-aos="fade-in" id="password">
+      <h1>Update Password</h1>
+      <form action="/patients/updatePassword" method="POST" class="container">
+        <div class="row">
+          <div class="mb-3">
+            <label for="oldPassword" class="form-label">Old Password</label>
+            <input type="password" class="form-control" name="oldPassword" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" class="form-control" name="newPassword" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Password</button>
+      </form>
+      <div class="container">
+        <br>
+        {% with messages = get_flashed_messages(category_filter=["password"]) %}
+        <label class=flashes>{{ messages[0] }}</label>
+        {% endwith %}
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- A library called AOS to animate section while scrolling-->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      offset: 400,
+      duration: 1000
+    });
+  </script>
+</body>
+
+</html>

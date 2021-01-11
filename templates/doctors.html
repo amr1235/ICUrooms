@@ -80,12 +80,12 @@
         <tbody>
           {% for patient in patients %}
           <tr>
-            <th scope="row">1</th>
+            <th scope="row">{{ loop.index0 + 1}}</th>
             <td>{{ patient['first_name'] }}</td>
             <td>{{ patient['last_name'] }}</td>
             <td>{{ patient['phone'] }}</td>
             <td>{{ patient['room_number'] }}</td>
-            <td><a href="{{ patient['email'] }}">Send Mail</a></td>
+            <td><a href="mailto: {{ patient['email'] }}">Send Mail</a></td>
             <td><a href="doctors/scans?patientId={{ patient['id'] }}" >Patient’s Scans</a></td>
           </tr>
           {% endfor %}

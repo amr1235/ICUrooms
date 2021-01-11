@@ -5,6 +5,7 @@ from routes.tech import tech
 from routes.admin import ad
 from routes.check import check
 from routes.doctor import doctor
+from routes.patient import patient
 import mysql.connector
 
 app = Flask(__name__)
@@ -14,6 +15,7 @@ app.register_blueprint(logIn)
 app.register_blueprint(ad)#, url_prefix='/admin')
 app.register_blueprint(tech, url_prefix='/tech')
 app.register_blueprint(doctor)
+app.register_blueprint(patient)
 
 Id = 0 # global variable for session['username']
 

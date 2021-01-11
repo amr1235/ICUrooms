@@ -10,7 +10,7 @@ def check():
         if lastTwoDigits == "00" :
             return 'doctors'
         elif lastTwoDigits == "01" :
-            return 'patient'
+            return 'patients'
         elif lastTwoDigits == "11" : 
             return 'tech'
         elif lastTwoDigits == "10" :

@@ -7,7 +7,7 @@ import io,time
 doctor = Blueprint("doctor", __name__)
 # database config
 DB = mysql.connector.connect(
-    host="localhost", user="root", passwd="mysql", database="icu")
+    host="localhost", user="farook", passwd="sql123", database="icu")
 cursor = DB.cursor()
 
 
@@ -87,8 +87,6 @@ def updat_doctor_info():
             return redirect('/')
 
 # update doctor password
-
-
 @doctor.route('/doctors/updatePassword', methods=['GET', 'POST'])
 def update_doctor_password():
     if(request.method == "GET"):
@@ -119,15 +117,10 @@ def update_doctor_password():
 
         else:
             return redirect('/')
+        
 # download patient scan
-
-
 @doctor.route('/doctors/scans',methods=['GET','POST'])
 def scans_Download():
-    if(request.method == "GET") : 
-        print("get")
-    else : 
-        print("post")
     if(is_doctor_logged_in()) : 
         patient_id = request.args.get('patientId')
         if patient_id == None : return redirect('/doctors')

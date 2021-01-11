@@ -5,7 +5,7 @@ from routes.check import check
 
 logIn = Blueprint("login",__name__)
 
-DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="icu")
+DB = mysql.connector.connect(host="localhost",user="root",passwd="mysql",database="icu")
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
