@@ -5,7 +5,7 @@ from routes.check import check
 
 logIn = Blueprint("login",__name__)
 
-DB = mysql.connector.connect(host="localhost",user="root",passwd="mysql",database="icu")
+DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="icu")
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
@@ -35,7 +35,7 @@ def defining_id (id) :
     elif lastTwoDigits == "11" :
         return {"id" : id, "typ" : 'technicians'}
     else:
-        return {"id" : id, "typ" : 'admins'}
+        return {"id" : id, "typ" : 'admin'}
     
 # checkin if the id and the password is correct and log in if So
 def valid_login(id,password) :

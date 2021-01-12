@@ -12,9 +12,9 @@ def check():
         elif lastTwoDigits == "01" :
             return 'patients'
         elif lastTwoDigits == "11" : 
-            return 'tech'
+            return 'technicians'
         elif lastTwoDigits == "10" :
-            return 'admin' 
+            return 'admins' 
         else:
             return 'not in users'
 

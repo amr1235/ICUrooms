@@ -13,7 +13,7 @@ app.secret_key = b'ad^&%#HJaS54O%$%' # to encrypte the data
 app.permanent_session_lifetime = timedelta(days=5) # 5-day session
 app.register_blueprint(logIn)
 app.register_blueprint(ad)#, url_prefix='/admin')
-app.register_blueprint(tech, url_prefix='/tech')
+app.register_blueprint(tech)#, url_prefix='/tech')
 app.register_blueprint(doctor)
 app.register_blueprint(patient)
 
