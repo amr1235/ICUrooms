@@ -1,0 +1,37 @@
+html{
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.navbar{
+    font-weight: bold;
+    padding: 0.1em;
+}
+.navbar a{
+    color: #000000 !important;
+    opacity: 0.8;
+    margin: 0rem 1rem 0rem 1rem;
+}
+.navbar a:hover{
+    opacity: 1;
+    color: brown !important;
+}
+#Aplus{
+    max-width: 2.5em;
+    opacity: 1 !important;
+}
+.navbar-nav{
+    margin-left: auto;
+}
+section{
+    padding: 20% 10% 20% 10%;
+}
+section>h1{
+    margin-bottom: 3%;
+    padding: 3%;
+    text-align: center;
+    color: brown;
+    font-weight: bolder;
+    font-size: 3rem;
+}

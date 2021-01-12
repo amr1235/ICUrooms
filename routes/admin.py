@@ -1,12 +1,12 @@
 from flask import Blueprint, redirect, render_template, session, request, url_for
 from routes.check import check, userType
 import mysql.connector
+from config.DB import connect
 
 ad = Blueprint('admin' ,__name__)
 
 # database config
-DB = mysql.connector.connect(
-    host="localhost", user="farook", passwd="sql123", database="icu")
+DB = connect()
 cursor = DB.cursor(buffered=True)
 cursor_ = DB.cursor(buffered=True)
 

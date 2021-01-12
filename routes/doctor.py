@@ -1,13 +1,13 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session, flash, make_response, send_file
 from config.middlewares import is_doctor_logged_in
+from config.DB import connect
 import mysql.connector
 import zipfile
 import io,time
 
 doctor = Blueprint("doctor", __name__)
 # database config
-DB = mysql.connector.connect(
-    host="localhost", user="farook", passwd="sql123", database="icu")
+DB = connect()
 cursor = DB.cursor()
 
 

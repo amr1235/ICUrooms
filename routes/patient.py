@@ -1,12 +1,12 @@
 from flask import Blueprint, request, render_template, redirect, url_for, session, flash, make_response, send_file
 import mysql.connector
 from config.middlewares import is_patient_logged_in
+from config.DB import connect
 
 patient = Blueprint("patient", __name__)
 
 # database config
-DB = mysql.connector.connect(
-    host="localhost", user="farook", passwd="sql123", database="icu")
+DB = connect()
 cursor = DB.cursor()
 
 @patient.route('/patients')
@@ -98,6 +98,7 @@ def update_patient_info():
     else : 
         return redirect('/') 
 
+#update patient password
 @patient.route('/patients/updatePassword',methods=['GET','POST'])
 def update_patient_password():
     if request.method == "GET" : return redirect('/patients')

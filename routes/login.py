@@ -1,11 +1,12 @@
 from flask import Blueprint,request,render_template,redirect,url_for, session
 from datetime import timedelta
 import mysql.connector
+from config.DB import connect
 from routes.check import check
 
 logIn = Blueprint("login",__name__)
 
-DB = mysql.connector.connect(host="localhost",user="farook",passwd="sql123",database="icu")
+DB = connect()
 cursor = DB.cursor()
 @logIn.route('/login',methods=['GET','POST'])
 def login():
@@ -35,7 +36,7 @@ def defining_id (id) :
     elif lastTwoDigits == "11" :
         return {"id" : id, "typ" : 'technicians'}
     else:
-        return {"id" : id, "typ" : 'admin'}
+        return {"id" : id, "typ" : 'admins'}
     
 # checkin if the id and the password is correct and log in if So
 def valid_login(id,password) :
