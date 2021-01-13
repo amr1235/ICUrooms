@@ -13,6 +13,7 @@ cursor = DB.cursor()
 def patients_home():
     if is_patient_logged_in() :
         patient_id = session['username']
+        DB.commit()
         doctors = get_doctors(patient_id)
         scansIds = get_patient_scans(patient_id)
         patientInfo = get_patient_info(patient_id)

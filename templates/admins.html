@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A+ Hospital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+        crossorigin="anonymous">
+    <link rel="shourtcut icon" href="{{ url_for('static',filename='pics/A+.png') }}">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/admin.css') }}">
+    <script type="text/javascript" src="{{url_for('static',filename='js/admin.js')}}"></script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar  navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"> <img id="Aplus" src="{{ url_for('static',filename='pics/A+.png') }}"
+                        alt="logo"> A+ Hospital </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="#free">Free-technicains <i
+                                    class="fas fa-tools"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#report">Report a device <i class="far fa-file"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#message">Notify a Patient <i class="fas fa-envelope"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#register">Register <i class="fas fa-plus-square"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#room">Add Room <i class="fas fa-procedures"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#device">Add Device <i class="fas fa-laptop-medical"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/logout" class="btn btn-danger container">Log-out <i
+                                    class="fas fa-sign-out-alt"></i></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+
+        <section class="container" id="free" data-aos="fade-in">
+            <h1 class="d-block"> The free Technicians are </h1>
+            {% if freeTechs|length != 0 %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">technician name</th>
+                        <th scope="col">technician ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <th scope="row">1</th>
+                        <td>amr mohamed </td>
+                        <td>12511</td>
+                    </tr> -->
+                    {%for tech in freeTechs%}
+                    <tr>
+                        <th scope="row">{{loop.index0 + 1}}</th>
+                        <td>{{ tech[0] + " " +tech[1] }}</td>
+                        <td>{{ tech[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h3>there are no free technicians right now</h3>
+            {% endif %}
+        </section>
+
+        <section class="container" id="report" data-aos="fade-in">
+            <h1>Report a non-functional device</h1>
+            <form action="/admins/to-tech" method="POST" class="container">
+                <div class="row">
+                    <div class="mb-3">
+                        <select name="tech_id" class="form-select" aria-label="Default select example">
+                            <option selected>Select id</option>
+                            {% if techs|length !=0 %}
+                            {% for tech in techs %}
+                            <option>{{tech[2]}} | {{ tech[0] + "  " +tech[1] }} | {{ tech[3] }}</option>
+                            {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- <div class="mb-3">
+                        <label for="device_DSN" class="form-label">Device DSN</label>
+                        <input type="number" class="form-control" name="device_DSN" required>
+                    </div> -->
+                    <div class="mb-3">
+                        <select class="form-select" name="device_DSN" aria-label="Default select example">
+                            <option value="select">select device serial number</option>
+                            {% if devices|length != 0 %}
+                            {% for device in devices %}
+                            <option value="{{device[1]}}">{{ device[1] }} | {{ device[0] }}</option>
+                            {%endfor%}
+                            {%endif%}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary container">Report</button>
+            </form>
+            <div class="container">
+                <br>
+                {% with messages = get_flashed_messages(category_filter=["reportTech"]) %}
+                <label class=flashes>{{ messages[0] }}</label>
+                {% endwith %}
+            </div>
+        </section>
+
+
+        <section class="container" id="message" data-aos="fade-in">
+            <h1>Notify a pattient about an update</h1>
+            <form action="/admins/inform-patient" method="POST" enctype="multipart/form-data" class="container">
+                <div class="row">
+                    <div class="mb-3">
+                        <select name="patient_id" class="form-select" aria-label="Default select example">
+                            <option selected>Select id</option>
+                            {% if patientsInfo|length !=0 %}
+                            {% for patient in patientsInfo %}
+                            <option>{{patient[2]}} | {{ patient[0] + "  " +patient[1] }}</option>
+                            {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <input type="file" accept="image/*" name="patient-scan">
+                        <label for="patient-scan">max size:16MB</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary container mt-3 btn-lg">Send Scan</button>
+                    </div>
+                </div>
+
+            </form>
+            <div class="container">
+                <br>
+                {% with messages = get_flashed_messages(category_filter=["inform-patient"]) %}
+                <label class=flashes>{{ messages[0] }}</label>
+                {% endwith %}
+            </div>
+        </section>
+
+
+
+        <section class="container" id="register" data-aos="fade-in">
+            <h1>Register</h1>
+            <form action="/admins/insertUser" method="POST" class="container">
+                <div class="row">
+                    <div class="mb-3 col-12">
+                        <label for="firstName" class="form-label">first Name</label>
+                        <input type="text" class="form-control" name="firstName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-12">
+                        <label for="lastName" class="form-label">lastName</label>
+                        <input type="name" class="form-control" name="lastName" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" name="email" placeholder="ex:user@website.com"
+                            required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="number" class="form-control" name="phone" required>
+                    </div>
+                </div>
+
+                <select class="form-select mb-3 mt-3" onchange="admSelectCheck(this)" name="table_name"
+                    aria-label="Default select example">
+                    <option value="doctors">Doctor</option>
+                    <option value="patients" id="admOption">Patient</option>
+                    <option value="technicians">Technician</option>
+                    <option value="admins">Admin</option>
+                </select>
+                <div class="row" id="admDivCheck">
+                    <div class="mb-3">
+                        <select class="form-select" name="roomNum" aria-label="Default select example">
+                            <option value="select">selectRoom</option>
+                            {% if rooms|length != 0 %}
+                            {% for room in rooms %}
+                            <option value="{{room[0]}}">{{ room[0] }} | {{ room[1] }}</option>
+                            {%endfor%}
+                            {%endif%}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary container">Register</button>
+            </form>
+            <div class="container">
+                <br>
+                {% with messages = get_flashed_messages(category_filter=["addUser"]) %}
+                <label class=flashes>{{ messages[0] }}</label>
+                {% endwith %}
+            </div>
+        </section>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <section id="device" class="container" data-aos="fade-in">
+            <h1>Add a new device</h1>
+            <form action="/admins/addNewDevice" method="POST" class="container">
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="deviceName" class="form-label">Device Name</label>
+                        <input type="text" class="form-control" name="deviceName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="Dsn" class="form-label">Device DSN</label>
+                        <input type="number" class="form-control" name="Dsn" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3">
+                        <select class="form-select mb-3 mt-3" name="roomNum" aria-label="Default select example">
+                            <option value="patients">roomNumber</option>
+                            {% if rooms|length != 0 %}
+                            {% for room in rooms %}
+                            <option value="{{room[0]}}">{{ room[0] }} </option>
+                            {%endfor%}
+                            {%endif%}
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary container">Add device</button>
+            </form>
+            <div class="container">
+                <br>
+                {% with messages = get_flashed_messages(category_filter=["devices"]) %}
+                <label class=flashes>{{ messages[0] }}</label>
+                {% endwith %}
+            </div>
+        </section>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <section id="room" class="container" data-aos="fade-in">
+            <h1>Add a new Room</h1>
+            <form action="/admins/addNewRoom" method="POST" class="container">
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="roomNum" class="form-label">Room Number</label>
+                        <input type="number" class="form-control" name="roomNum" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3">
+                        <label for="bedsNum" class="form-label">Number of Beds</label>
+                        <input type="number" class="form-control" name="bedsNum" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary container">Add room</button>
+            </form>
+            <div class="container">
+                <br>
+                {% with messages = get_flashed_messages(category_filter=["room"]) %}
+                <label class=flashes>{{ messages[0] }}</label>
+                {% endwith %}
+            </div>
+        </section>
+
+
+
+    </main>
+
+
+
+    <!-- A library called AOS to animate section while scrolling-->
+    <script type="text/javascript" src="{{url_for('static',filename='js/admin.js')}}"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        document.getElementById("admDivCheck").style.display = "none";
+        function admSelectCheck(nameSelect) {
+            console.log(nameSelect);
+            if (nameSelect) {
+                admOptionValue = document.getElementById("admOption").value;
+                if (admOptionValue == nameSelect.value) {
+                    document.getElementById("admDivCheck").style.display = "block";
+                }
+                else {
+                    document.getElementById("admDivCheck").style.display = "none";
+                }
+            }
+            else {
+                document.getElementById("admDivCheck").style.display = "none";
+            }
+        }
+        AOS.init({
+            offset: 400,
+            duration: 1000
+        });
+    </script>
+</body>
+
+</html>

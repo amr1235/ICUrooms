@@ -14,6 +14,7 @@ cursor = DB.cursor()
 @doctor.route("/doctors")
 def doctors_home():
     if(is_doctor_logged_in()):
+        DB.commit()
         id = session['username']
         doctor_data = get_info(id)
         patients = get_patients(id)

@@ -17,6 +17,7 @@ def tech_home():
         # get data from db and show them
         # get from fix the devices related to tech (getDevices)
         # get detailed info about the devices      (getDeviceInfo)
+        DB.commit()
         tech_id = session['username']
         all_devices_data = getDeviceInfo(getDevices())
         techInfo = get_techincian_info(tech_id)
@@ -104,8 +105,12 @@ def device_finished():
     cursor.execute(update_device_status)
     DB.commit()
     #change technician status
-    update_tech_status = "UPDATE technicians SET busyOrNot = 0 WHERE id=%s"%(tech_id)
-    cursor.execute(update_tech_status)
+    get_numbers_of_dev = "SELECT busyOrNot FROM technicians WHERE id = %s"%(tech_id,)
+    cursor.execute(get_numbers_of_dev)
+    busyOrNot = cursor.fetchone()[0]
+    busyOrNot = busyOrNot - 1
+    set_get_numbers_of_dev = "UPDATE technicians SET busyOrNot = %s WEHERE id = %s"%(busyOrNot,tech_id)
+    cursor.execute(set_get_numbers_of_dev)
     DB.commit()
     # delete the realation between the tech and the device 
     delete = "DELETE FROM fix WHERE device_id=%s AND technician_id=%s"%(Dsn,tech_id)
