@@ -32,11 +32,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link " aria-current="page" href="#calender">Calender <i
+              <a class="nav-link " aria-current="page" href="/doctors/calendar">Calender <i
                   class="fas fa-calendar-week"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#patients">Patients <i class="fas fa-user-injured"></i></a>
+              <a class="nav-link" href="#patients">Patients you have <i class="fas fa-user-injured"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#see">See Patient<i class="fas fa-user-injured"></i></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#info">Info <i class="fas fa-info-circle"></i></a>
@@ -51,17 +54,39 @@
   </header>
 
   <main>
-
-    <section id="calender" class="container" data-aos="fade-in">
-      <h1>Welcome Doctor</h1>
-      <h2>Here is a calender with all the important Patient visits you have</h2>
-      <div class="row">
-        <div class="col-12">
-
+    <section class="container" id="see" data-aos="fade-in">
+      <h1>Select the patient you want to examine</h1>
+      <form action="/doctors/addExamin" method="POST" class="container">
+        <div class="row">
+          <div class="mb-3">
+            <select name="patient_id" class="form-select" aria-label="Default select example">
+              <option selected>Select patient</option>
+              {% if allPatients|length !=0 %}
+              {% for patient in allPatients %}
+              <option value="{{ patient[2] }}">{{patient[2]}} | {{ patient[0] + "  " + patient[1] }} | {{ patient[5] }}
+              </option>
+              {% endfor %}
+              {% endif %}
+            </select>
+          </div>
         </div>
+        <div class="row">
+          <div class="mb-3">
+            <label for="examinDate" class="form-label">examine date</label>
+            <input type="date" name="examinDate" class="form-control" id="phone"
+              required>
+          </div>
+        </div>
+        </div>
+        <button type="submit" class="btn btn-primary container">examine</button>
+      </form>
+      <div class="container">
+        <br>
+        {% with messages = get_flashed_messages(category_filter=["examine"]) %}
+        <label class=flashes>{{ messages[0] }}</label>
+        {% endwith %}
       </div>
     </section>
-
     <section id="patients" class="container" data-aos="fade-in">
       <h1>The Patients you are overseeing</h1>
       {% if patients|length != 0 %}
@@ -75,6 +100,7 @@
             <th scope="col">Room Number</th>
             <th scope="col">E-mail</th>
             <th scope="col">Scans</th>
+            <th scope="col">Finished</th>
           </tr>
         </thead>
         <tbody>
@@ -86,7 +112,8 @@
             <td>{{ patient['phone'] }}</td>
             <td>{{ patient['room_number'] }}</td>
             <td><a href="mailto: {{ patient['email'] }}">Send Mail</a></td>
-            <td><a href="doctors/scans?patientId={{ patient['id'] }}" >Patient’s Scans</a></td>
+            <td><a href="doctors/scans?patientId={{ patient['id'] }}">Patient’s Scans</a></td>
+            <td><a href="/doctors/finished?patient_id={{patient['id']}}" class="btn btn-primary d-block">Finished</a></td>
           </tr>
           {% endfor %}
         </tbody>

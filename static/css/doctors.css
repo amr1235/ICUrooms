@@ -23,7 +23,7 @@ html{
 .navbar-nav{
     margin-left: auto;
 }
-#calender,#info,#patients{
+#calender,#info,#patients,#see{
     padding: 20% 10% 20% 10%;
 }
 section>h1{

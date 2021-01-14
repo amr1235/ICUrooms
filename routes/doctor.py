@@ -4,12 +4,14 @@ from config.DB import connect
 import mysql.connector
 import zipfile
 import io,time
+from routes.check import check
 
 doctor = Blueprint("doctor", __name__)
 # database config
 DB = connect()
 cursor = DB.cursor()
-
+# doctor appointment
+doctorEvents = []
 
 @doctor.route("/doctors")
 def doctors_home():
@@ -18,7 +20,8 @@ def doctors_home():
         id = session['username']
         doctor_data = get_info(id)
         patients = get_patients(id)
-        return render_template("doctors.html", patients=patients, doctor_data=doctor_data)
+        allPatients = get_all_patients()
+        return render_template("doctors.html", patients=patients, doctor_data=doctor_data,allPatients=allPatients)
     else:
         return redirect("/")
 
@@ -45,7 +48,7 @@ def get_patients(doctor_id):
             'last_name': info[1],
             'phone': info[4],
             'room_number': info[5],
-            'email': info[8]
+            'email': info[7]
         }
         patientsData.append(data)
     # now i have all data i want
@@ -66,6 +69,12 @@ def get_info(doctor_id):
         'email': info[6]
     }
 
+
+#get all patient data 
+def get_all_patients():
+    sql = "SELECT * FROM patients"
+    cursor.execute(sql)
+    return cursor.fetchall()
 
 # update doctor info
 @doctor.route('/doctors/updateInfo', methods=['GET', 'POST'])
@@ -147,4 +156,70 @@ def scans_Download():
             return redirect('/doctors')
     else :
         return redirect('/')
-        
+    
+#doctor calendar
+@doctor.route('/doctors/calendar')
+def doctorCalendar():
+    if is_doctor_logged_in() : 
+        # get all events 
+        doctor_id = session['username']
+        sql = "SELECT * from events WHERE doctor_id = %s"%(doctor_id,)
+        cursor.execute(sql)
+        eventsT = cursor.fetchall()
+        events = list()
+        for event in eventsT : 
+            appointment = {
+                'name' : event[0],
+                'date' : event[2]
+            }
+            events.append(appointment)
+        return render_template('calendar.html',events=events)
+    else :
+        return redirect('/')
+    return render_template('calendar.html')
+
+#doctor examin patient 
+@doctor.route('/doctors/addExamin',methods=['GET','POST'])
+def addExamin() :
+    if is_doctor_logged_in() : 
+        if request.method == "GET" : return redirect('/doctors')
+        (patient_id,examinDate) = (request.form['patient_id'],request.form['examinDate'])
+        doctor_id = session['username']
+        add_examin = "INSERT INTO examine (patient_id,doctor_id,examine_date) VALUES (%s,%s,%s)"
+        values = (patient_id,doctor_id,examinDate)
+        cursor.execute(add_examin,values)
+        DB.commit()
+        # push new appointment to the calendar 
+        # first select patient name and room number
+        sql = """SELECT fname,lname,room_N FROM patients WHERE id = %s"""
+        value = (patient_id,)
+        cursor.execute(sql,value)
+        info = cursor.fetchone()
+        name = info[0] + " " + info[1] + " |" + " " + str(info[2])
+        # add the event 
+        add_event = "INSERT INTO events (name,doctor_id,date,patient_id) VALUES (%s,%s,%s,%s)" 
+        values = (name,doctor_id,examinDate,patient_id)
+        cursor.execute(add_event,values)
+        DB.commit()
+        flash("A new appointment has been added please check your calendar",'examine')
+        return redirect('/doctors#see')
+    else : 
+        return redirect('/')
+    
+#the finished seeing the patient
+@doctor.route('/doctors/finished')
+def finished():
+    if check() != "doctors" : return redirect('/')
+    if request.args.get('patient_id') == None : return redirect('/doctors')
+    patient_id = request.args.get('patient_id')
+    doctor_id = session['username']
+    # delete examine row from the database
+    delete_examine = "DELETE FROM examine WHERE patient_id = %s AND doctor_id = %s"%(patient_id,doctor_id)
+    cursor.execute(delete_examine)
+    DB.commit()
+    #delete the appoint ment from events 
+    delete_app = "DELETE FROM events WHERE doctor_id= %s AND patient_id=%s" %(doctor_id,patient_id)
+    cursor.execute(delete_app)
+    DB.commit()
+    return redirect('/doctors#patients')
+    
