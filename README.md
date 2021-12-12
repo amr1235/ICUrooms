@@ -1,5 +1,4 @@
 # ICUrooms/Backend
-# School System
 A hospital system for handling icu rooms, doctors appointments ,technicians tasks ,devices status and patients scans
 ## Prerequisites
 
